@@ -159,7 +159,7 @@ else{
 
  $name='out_'.date('m-d_hia').'.csv';
 move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile);
-passthru("python gmaps_standard.py uploads/$filename output/$name -off $API_KEYs1 $Filler2 $Filler3 $Filler4 $Filler5 $Mode1 $Mode2 $Mode3 $Mode4 $Start_Time $End_Time $time_stretch 2>&1",$return_var );
+passthru("python /docs/gmaps_standard.py uploads/$filename output/$name -off $API_KEYs1 $Filler2 $Filler3 $Filler4 $Filler5 $Mode1 $Mode2 $Mode3 $Mode4 $Start_Time $End_Time $time_stretch 2>&1",$return_var );
 #echo "python gmaps_standard.py uploads/$filename output/$name -off $API_KEYs1 $Filler2 $Filler3 $Filler4 $Filler5 2>&1";
  echo"<br><br><br><br>";
  if ($return_var==0) {
