@@ -114,13 +114,31 @@ a:active {
     $Mode2 = $_POST['Walking'];
     $Mode3 = $_POST['Bicycling'];
     $Mode4 = $_POST['Transit'];
-   
+   print "MODES:";
+   print $Mode1;   
+   print $Mode2;
+   print $Mode3;
+   print $Mode4;
+if($Mode1 == "0" && $Mode2 == "0" && $Mode3 == "0" && $Mode4 == "0"){
+    print "No Modes were Selected. Please Retry Again.";
+    exit;
+}
 
     $Start_Time = $_POST['Start_Time'];
     $End_Time = $_POST['End_Time'];
 
+print "TIMES:";
+print $Start_Time;
+print $End_Time;
+
     if($Start_Time != "" and $End_Time != ""){
+       
         $time_stretch = 1;
+    }
+    else{
+$Start_Time = 0;
+        $End_Time = 0;
+        $time_stretch = 0;
     }
 
 if($_POST['API_KEY1']==""){
@@ -150,7 +168,7 @@ $Filler5 = "0";
 else{
     $Filler5 = $_POST['API_KEY5'];
 }
-    $uploaddir = '../uploads/';
+    $uploaddir = 'uploads/';
     $uploadfile = $uploaddir . basename($_FILES['userfile']['name']);
     $filename = $_FILES['userfile']['name'];
    
@@ -159,8 +177,10 @@ else{
 
  $name='out_'.date('m-d_hia').'.csv';
 move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile);
-passthru("python gmaps_standard.py ../uploads/$filename ../output/$name -off $API_KEYs1 $Filler2 $Filler3 $Filler4 $Filler5 $Mode1 $Mode2 $Mode3 $Mode4 $Start_Time $End_Time $time_stretch 2>&1",$return_var );
+passthru("python gmaps_standard.py uploads/$filename output/$name -off $API_KEYs1 $Filler2 $Filler3 $Filler4 $Filler5 $Mode1 $Mode2 $Mode3 $Mode4 $Start_Time $End_Time $time_stretch 2>&1",$return_var );
 #echo "python gmaps_standard.py uploads/$filename output/$name -off $API_KEYs1 $Filler2 $Filler3 $Filler4 $Filler5 2>&1";
+ print "python gmaps_standard.py uploads/$filename output/$name -off $API_KEYs1 $Filler2 $Filler3 $Filler4 $Filler5 $Mode1 $Mode2 $Mode3 $Mode4 $Start_Time $End_Time $time_stretch 2>&1";
+
  echo"<br><br><br><br>";
  if ($return_var==0) {
       echo "File is valid, and was successfully uploaded.\n";

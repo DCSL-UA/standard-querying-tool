@@ -77,7 +77,7 @@ for entry in modes_to_run:
 modes_printed = 0
 header = ""
 for entry in modes_to_run:
-  if(modes_printed == mode_count - 2):
+  if(modes_printed == len(modes_to_run)-1) or (len(modes_to_run)==1):
     header += (entry[0] + "1time," + entry[0] + "1dist," + entry[0] + "2time," + entry[0] + "2dist," + entry[0] + "3time," + entry[0] + "3dist")
   else:
     header += (entry[0] + "1time," + entry[0] + "1dist," + entry[0] + "2time," + entry[0] + "2dist," + entry[0] + "3time," + entry[0] + "3dist,mode,")
@@ -93,7 +93,8 @@ output.write("\n")
 x=1
 counter=0
 y=0
-time_stretch = sys.argv[13]
+time_stretch = sys.argv[15]
+print time_stretch
 if (str(time_stretch) == "1"):
     start_time = sys.argv[13]
     end_time = sys.argv[14]
@@ -107,7 +108,10 @@ for line in inputfile:
       x+=1
       y+=1
   address = line.strip().split(",")[0]+ ","+line.strip().split(",")[1]
-  destination = line.strip().split(",")[2]+ ","+line.strip().split(",")[3]
+  if(line.strip().split(',')[2][0] == ' '):
+    destination = line.strip().split(",")[2][1:] + "," +line.strip().split(",")[3]
+  else:
+    destination = line.strip().split(",")[2] + "," +line.strip().split(",")[3]
   output.write(address+","+destination+",")
   output.write(str(datetime.datetime.now().strftime("%H:%M:%S")))
   traffic_models_list = []
@@ -121,8 +125,9 @@ for line in inputfile:
       output.write(",IF%s" % traffic_type)
       if(time_stretch == 1):
         time.sleep(time_over_entries)
-      directions = gmaps.directions(address,destination,mode=mode,units="metric",departure_time=datetime.now(),alternatives="true",optimize_waypoints="true")
+      directions = gmaps.directions(address,destination,mode=mode,units="metric",departure_time=datetime.now(),alternatives="true")
       i=0
+      print directions
       output.write(",%s" % mode)
       iterate_counter+=1
       for route in directions:
@@ -143,6 +148,7 @@ for line in inputfile:
         time.sleep(time_over_entries)
       directions = gmaps.directions(address,destination,mode=mode,units="metric",departure_time=datetime.datetime.now(),alternatives="true",optimize_waypoints="true")
     i=0
+    outputjson.write(json.dumps(directions,sort_keys=True,indent=4)) 
     output.write(",%s" % mode)
     for route in directions:
       if(i<3):
