@@ -72,9 +72,9 @@ modes_printed = 0
 header = ""
 for entry in modes_to_run:
   if(modes_printed == len(modes_to_run)-1) or (len(modes_to_run)==1):
-    header += (entry[0] + "1time," + entry[0] +  "1traffic_time" + entry[0] + "1dist," + entry[0] + "2time," + entry[0] +  "2traffic_time" + entry[0] + "2dist," + entry[0] + "3time," + entry[0] +  "3traffic_time" + entry[0] + "3dist")
+    header += (entry[0] + "1time," + entry[0] +  "1traffic_time," + entry[0] + "1dist," + entry[0] + "2time," + entry[0] +  "2traffic_time," + entry[0] + "2dist," + entry[0] + "3time," + entry[0] +  "3traffic_time," + entry[0] + "3dist")
   else:
-    header += (entry[0] + "1time," + entry[0] +  "1traffic_time" + entry[0] + "1dist," + entry[0] + "2time," + entry[0] +  "2traffic_time" + entry[0] + "2dist," + entry[0] + "3time," + entry[0] +  "3traffic_time" + entry[0] + "3dist,mode,")
+    header += (entry[0] + "1time," + entry[0] +  "1traffic_time," + entry[0] + "1dist," + entry[0] + "2time," + entry[0] +  "2traffic_time," + entry[0] + "2dist," + entry[0] + "3time," + entry[0] +  "3traffic_time," + entry[0] + "3dist,mode,")
     modes_printed += 1
 
 output.write("Slat,Slong,Dlat,Dlong,time,mode," + header)
