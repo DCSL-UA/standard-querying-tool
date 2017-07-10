@@ -58,29 +58,23 @@ KEY4 = sys.argv[7]
 KEY5 = sys.argv[8]
 KEYS=[API_KEY_INPUT,KEY2,KEY3,KEY4,KEY5]
 
-is_driving = sys.argv[9]
-is_walking = sys.argv[10]
-is_bike = sys.argv[11]
-is_transit = sys.argv[12]
-all_modes = [is_driving,is_walking,is_bike,is_transit]
+#Compile all modes to see which are to be run (ORDER: Driving,Walking,Biking,Transit)
+all_modes = [sys.argv[9],sys.argv[10],sys.argv[11],sys.argv[12]]
 mode_count = 0
+#Get Count of how many modes we are running
 for entry in all_modes:
   if(entry == "on"):
     mode = get_mode(mode_count)
     modes_to_run.append(mode)
   mode_count += 1
 
-print "COUNT: " + str(mode_count)
-print "Modes that were run: "
-for entry in modes_to_run:
-  print entry + " "
 modes_printed = 0
 header = ""
 for entry in modes_to_run:
   if(modes_printed == len(modes_to_run)-1) or (len(modes_to_run)==1):
-    header += (entry[0] + "1time," + entry[0] + "1dist," + entry[0] + "2time," + entry[0] + "2dist," + entry[0] + "3time," + entry[0] + "3dist")
+    header += (entry[0] + "1time," + entry[0] +  "1traffic_time" + entry[0] + "1dist," + entry[0] + "2time," + entry[0] +  "2traffic_time" + entry[0] + "2dist," + entry[0] + "3time," + entry[0] +  "3traffic_time" + entry[0] + "3dist")
   else:
-    header += (entry[0] + "1time," + entry[0] + "1dist," + entry[0] + "2time," + entry[0] + "2dist," + entry[0] + "3time," + entry[0] + "3dist,mode,")
+    header += (entry[0] + "1time," + entry[0] +  "1traffic_time" + entry[0] + "1dist," + entry[0] + "2time," + entry[0] +  "2traffic_time" + entry[0] + "2dist," + entry[0] + "3time," + entry[0] +  "3traffic_time" + entry[0] + "3dist,mode,")
     modes_printed += 1
 
 output.write("Slat,Slong,Dlat,Dlong,time,mode," + header)
@@ -135,13 +129,15 @@ for line in inputfile:
           output.write(",")
           output.write(str(directions[i]['legs'][0]['duration']['value']))
           output.write(",")
+          output.write(str(directions[i]['legs'][0]['duration_in_traffic']['value']))
+          output.write(',')
           output.write(str(directions[i]['legs'][0]['distance']['value']))
           i+=1
       if(i<3):
-        output.write(",NULL,NULL")
+        output.write(",NULL,NULL,NULL")
         i+=1
         while(i<3):
-          output.write(","+"NULL"+",NULL")
+          output.write(","+"NULL"+",NULL,NULL")
           i+=1
     else:
       if(str(time_stretch) == "1"):
@@ -152,16 +148,18 @@ for line in inputfile:
     output.write(",%s" % mode)
     for route in directions:
       if(i<3):
-        output.write(",")
-        output.write(str(directions[i]['legs'][0]['duration']['value']))
-        output.write(",")
-        output.write(str(directions[i]['legs'][0]['distance']['value']))
+          output.write(",")
+          output.write(str(directions[i]['legs'][0]['duration']['value']))
+          output.write(",")
+          output.write(str(directions[i]['legs'][0]['duration_in_traffic']['value']))
+          output.write(',')
+          output.write(str(directions[i]['legs'][0]['distance']['value']))
+          i+=1
+      if(i<3):
+        output.write(",NULL,NULL,NULL")
         i+=1
-    if(i<3):
-      output.write(",NULL,NULL")
-      i+=1
-      while(i<3):
-        output.write(","+"NULL"+",NULL")
-        i+=1
+        while(i<3):
+          output.write(","+"NULL"+",NULL,NULL")
+          i+=1
   #print counter
   output.write("\n")
