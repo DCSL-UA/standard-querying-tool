@@ -72,23 +72,30 @@ modes_printed = 0
 header = ""
 for entry in modes_to_run:
   if(modes_printed == len(modes_to_run)-1) or (len(modes_to_run)==1):
-    header += (entry[0] + "1time," + entry[0] +  "1traffic_time," + entry[0] + "1dist," + entry[0] + "2time," + entry[0] +  "2traffic_time," + entry[0] + "2dist," + entry[0] + "3time," + entry[0] +  "3traffic_time," + entry[0] + "3dist")
+    if('driving' == entry):
+        header += (entry[0] + "1time," + entry[0] +  "1traffic_time," + entry[0] + "1dist," + entry[0] + "2time," + entry[0] +  "2traffic_time," + entry[0] + "2dist," + entry[0] + "3time," + entry[0] +  "3traffic_time," + entry[0] + "3dist")
+    else:
+        header += (entry[0] + "1time," + entry[0] + "1dist," + entry[0] + "2time," + entry[0] + "2dist," + entry[0] + "3time," + entry[0] + "3dist")
+
   else:
-    header += (entry[0] + "1time," + entry[0] +  "1traffic_time," + entry[0] + "1dist," + entry[0] + "2time," + entry[0] +  "2traffic_time," + entry[0] + "2dist," + entry[0] + "3time," + entry[0] +  "3traffic_time," + entry[0] + "3dist,mode,")
+    if('driving' == entry):
+        header += (entry[0] + "1time," + entry[0] +  "1traffic_time," + entry[0] + "1dist," + entry[0] + "2time," + entry[0] +  "2traffic_time," + entry[0] + "2dist," + entry[0] + "3time," + entry[0] +  "3traffic_time," + entry[0] + "3dist,mode,")
+    else:
+        header += (entry[0] + "1time," + entry[0] + "1dist," + entry[0] + "2time," + entry[0] + "2dist," + entry[0] + "3time," + entry[0] + "3dist,mode,")
     modes_printed += 1
 
 output.write("Slat,Slong,Dlat,Dlong,time,mode," + header)
 address = ""
 traffic_models_list = []
 destination = ""
-print "<br>LINE COUNT: " + str(file_len(str(sys.argv[1])))
+#print "<br>LINE COUNT: " + str(file_len(str(sys.argv[1])))
 
 output.write("\n")
 x=1
 counter=0
 y=0
 time_stretch = sys.argv[15]
-print time_stretch
+#print time_stretch
 if (str(time_stretch) == "1"):
     start_time = sys.argv[13]
     end_time = sys.argv[14]
@@ -121,7 +128,7 @@ for line in inputfile:
         time.sleep(time_over_entries)
       directions = gmaps.directions(address,destination,mode=mode,units="metric",departure_time=datetime.now(),alternatives="true")
       i=0
-      print directions
+      #print directions
       output.write(",%s" % mode)
       iterate_counter+=1
       for route in directions:
@@ -129,15 +136,22 @@ for line in inputfile:
           output.write(",")
           output.write(str(directions[i]['legs'][0]['duration']['value']))
           output.write(",")
-          output.write(str(directions[i]['legs'][0]['duration_in_traffic']['value']))
-          output.write(',')
+          if(mode=='driving'):
+            output.write(str(directions[i]['legs'][0]['duration_in_traffic']['value']))
+            output.write(',')
           output.write(str(directions[i]['legs'][0]['distance']['value']))
           i+=1
-      if(i<3):
+      if(i<3 and mode == 'driving'):
         output.write(",NULL,NULL,NULL")
         i+=1
         while(i<3):
           output.write(","+"NULL"+",NULL,NULL")
+          i+=1
+      if(i<3):
+        output.write(",NULL,NULL")
+        i+=1
+        while(i<3):
+          output.write(","+"NULL"+",NULL")
           i+=1
     else:
       if(str(time_stretch) == "1"):
@@ -151,15 +165,29 @@ for line in inputfile:
           output.write(",")
           output.write(str(directions[i]['legs'][0]['duration']['value']))
           output.write(",")
-          output.write(str(directions[i]['legs'][0]['duration_in_traffic']['value']))
-          output.write(',')
+          if(mode == 'driving'):
+            output.write(str(directions[i]['legs'][0]['duration_in_traffic']['value']))
+            output.write(',')
+          
           output.write(str(directions[i]['legs'][0]['distance']['value']))
           i+=1
-      if(i<3):
+      if(i<3 and mode == 'driving'):
         output.write(",NULL,NULL,NULL")
         i+=1
         while(i<3):
           output.write(","+"NULL"+",NULL,NULL")
           i+=1
+      if(i<3):
+        output.write(",NULL,NULL")
+        i+=1
+        while(i<3):
+          output.write(","+"NULL"+",NULL")
+          i+=1
+    if( i == 0 and mode=='driving'):
+      output.write(',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL')
+      i=3
+    if(i==0):
+      output.write(',NULL,NULL,NULL,NULL,NULL,NULL')
+      i=3
   #print counter
   output.write("\n")
