@@ -134,12 +134,12 @@ for line in inputfile:
       for route in directions:
         if(i<3):
           output.write(",")
-          output.write(str(directions[i]['legs'][0]['duration']['value']))
+          output.write(str(directions['routes'][i]['legs'][0]['duration']['value']))
           output.write(",")
           if(mode=='driving'):
-            output.write(str(directions[i]['legs'][0]['duration_in_traffic']['value']))
+            output.write(str(directions['routes'][i]['legs'][0]['duration_in_traffic']['value']))
             output.write(',')
-          output.write(str(directions[i]['legs'][0]['distance']['value']))
+          output.write(str(directions['routes'][i]['legs'][0]['distance']['value']))
           i+=1
       if(i<3 and mode == 'driving'):
         output.write(",NULL,NULL,NULL")
@@ -161,28 +161,28 @@ for line in inputfile:
     outputjson.write(json.dumps(directions,sort_keys=True,indent=4)) 
     output.write(",%s" % mode)
     for route in directions:
-      if(i<3):
-          output.write(",")
-          output.write(str(directions[i]['legs'][0]['duration']['value']))
-          output.write(",")
-          if(mode == 'driving'):
-            output.write(str(directions[i]['legs'][0]['duration_in_traffic']['value']))
-            output.write(',')
-          
-          output.write(str(directions[i]['legs'][0]['distance']['value']))
-          i+=1
-      if(i<3 and mode == 'driving'):
-        output.write(",NULL,NULL,NULL")
+      output.write(",")
+      output.write(str(route['legs'][0]['duration']['value']))
+      output.write(",")
+      if(mode == 'driving'):
+        output.write(str(route['legs'][0]['duration_in_traffic']['value']))
+        output.write(',')
+      output.write(str(route['legs'][0]['distance']['value']))
+      i+=1
+      if(i==3):
+        break
+    if(i<3 and mode == 'driving'):
+      output.write(",NULL,NULL,NULL")
+      i+=1
+      while(i<3):
+        output.write(","+"NULL"+",NULL,NULL")
         i+=1
-        while(i<3):
-          output.write(","+"NULL"+",NULL,NULL")
-          i+=1
-      if(i<3):
-        output.write(",NULL,NULL")
+    if(i<3):
+      output.write(",NULL,NULL")
+      i+=1
+      while(i<3):
+        output.write(","+"NULL"+",NULL")
         i+=1
-        while(i<3):
-          output.write(","+"NULL"+",NULL")
-          i+=1
     if( i == 0 and mode=='driving'):
       output.write(',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL')
       i=3
