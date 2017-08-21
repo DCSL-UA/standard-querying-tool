@@ -105,6 +105,7 @@ else:
     time_stretch = 0
 for line in inputfile:
   if(counter>2450):
+      print "Key #" + str(y) + "Reached its limit."
       API_KEY_INPUT = KEYS[y:x]
       x+=1
       y+=1
@@ -189,5 +190,6 @@ for line in inputfile:
     if(i==0):
       output.write(',NULL,NULL,NULL,NULL,NULL,NULL')
       i=3
-  #print counter
   output.write("\n")
+print "Total runs on current key: " + str(counter)
+
