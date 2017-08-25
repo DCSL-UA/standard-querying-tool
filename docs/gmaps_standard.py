@@ -166,7 +166,10 @@ for line in inputfile:
       output.write(str(route['legs'][0]['duration']['value']))
       output.write(",")
       if(mode == 'driving'):
-        output.write(str(route['legs'][0]['duration_in_traffic']['value']))
+        try:
+          output.write(str(route['legs'][0]['duration_in_traffic']['value']))
+        except KeyError:
+          output.write("NULL")
         output.write(',')
       output.write(str(route['legs'][0]['distance']['value']))
       i+=1
