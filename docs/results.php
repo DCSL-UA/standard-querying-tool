@@ -21,19 +21,13 @@ color: #FFFFFF;
 .nav2 a:hover, .nav2 a.selected {color: rgb(50,50,50); text-decoration: none;}
 .buffer {clear: both; width: 730px; height: 0px; margin: 20px; padding: 20px; background-color: rgb(255,255,255);}
 .content1-pagetitle {overflow: hidden; width: 750px; margin: 0px 0px 0px 0px; padding: 0px 0px 2px 0px; border-bottom: solid 3px rgb(88,144,168);); background-color: #FFFFFF;font-weight: bold; font-size: 180%;}
-
-
 .page-container-3 {width: 770px;margin: 0px auto; padding: 0px; background-color: url('crimson-background.gif'); border: solid 1px rgb(0,0,250);}
-
   .style16 {
     margin-left: 40px;
     font-size: medium;
 }
 body {font-size: 90%; width: 800px;margin: 0px auto; padding: 20px; background-color: rgb(255,255,255); font-family: arial, sans-serif;min-height: 500px;}
-
-
 .content3 {float: left; width: 800px; min-height: 500px; background-color: #FFFFFF; margin: 0px; padding: 0px 0px 2px 0px; color: rgb(0,0,0); font-size: 1.0em;}
-
 .site-name {
     width: 300px;
     height: 45px;
@@ -45,14 +39,6 @@ body {font-size: 90%; width: 800px;margin: 0px auto; padding: 20px; background-c
     padding-left: 0px;
    background-image: url('crimson-background.gif');
 }
-
-
-
-
-
-
-
-
 a:link {
     color: blue;
     background-color: transparent;
@@ -101,7 +87,6 @@ a:active {
 
 
 <?php
-
     $time_stretch = 0;
     
     $API_KEYs1 = $_POST['API_KEY1'];
@@ -114,23 +99,12 @@ a:active {
     $Mode2 = $_POST['Walking'];
     $Mode3 = $_POST['Bicycling'];
     $Mode4 = $_POST['Transit'];
-   #print "MODES:";
-   #print $Mode1;   
-   #print $Mode2;
-   #print $Mode3;
-   #print $Mode4;
 if($Mode1 == "0" && $Mode2 == "0" && $Mode3 == "0" && $Mode4 == "0"){
     print "No Modes were Selected. Please Retry Again.";
     exit;
 }
-
     $Start_Time = $_POST['Start_Time'];
     $End_Time = $_POST['End_Time'];
-
-#print "TIMES:";
-#print $Start_Time;
-#print $End_Time;
-
     if($Start_Time != "" and $End_Time != ""){
        
         $time_stretch = 1;
@@ -140,7 +114,6 @@ $Start_Time = 0;
         $End_Time = 0;
         $time_stretch = 0;
     }
-
 if($_POST['API_KEY1']==""){
    echo "An API key must be present in the first entry at least. Please Try again.";
 }
@@ -174,13 +147,11 @@ else{
    
   
    
-
  $name='out_'.date('m-d_hia').'.csv';
 move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile);
 passthru("python gmaps_standard.py uploads/$filename output/$name -off $API_KEYs1 $Filler2 $Filler3 $Filler4 $Filler5 $Mode1 $Mode2 $Mode3 $Mode4 $Start_Time $End_Time $time_stretch 2>&1",$return_var );
 #echo "python gmaps_standard.py uploads/$filename output/$name -off $API_KEYs1 $Filler2 $Filler3 $Filler4 $Filler5 2>&1";
  #print "python gmaps_standard.py uploads/$filename output/$name -off $API_KEYs1 $Filler2 $Filler3 $Filler4 $Filler5 $Mode1 $Mode2 $Mode3 $Mode4 $Start_Time $End_Time $time_stretch 2>&1";
-
  echo"<br><br><br><br>";
  if ($return_var==0) {
       echo "File is valid, and was successfully uploaded.\n";
@@ -199,8 +170,6 @@ if($return_var==0){
 else{
     echo "Please try again.";
 }
-
-
 ?>
 
 

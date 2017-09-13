@@ -96,6 +96,7 @@ counter=0
 y=0
 time_stretch = sys.argv[15]
 #print time_stretch
+
 if (str(time_stretch) == "1"):
     start_time = sys.argv[13]
     end_time = sys.argv[14]
@@ -127,7 +128,7 @@ for line in inputfile:
       output.write(",IF%s" % traffic_type)
       if(time_stretch == 1):
         time.sleep(time_over_entries)
-      directions = gmaps.directions(address,destination,mode=mode,units="metric",departure_time=datetime.now(),alternatives="true")
+      directions = gmaps.directions(address,destination,mode=mode,units="metric",alternatives="true")
       i=0
       #print directions
       output.write(",%s" % mode)
@@ -157,7 +158,7 @@ for line in inputfile:
     else:
       if(str(time_stretch) == "1"):
         time.sleep(time_over_entries)
-      directions = gmaps.directions(address,destination,mode=mode,units="metric",departure_time=datetime.datetime.now(),alternatives="true",optimize_waypoints="true")
+      directions = gmaps.directions(address,destination,mode=mode,units="metric",alternatives="true",optimize_waypoints="true")
     i=0
     outputjson.write(json.dumps(directions,sort_keys=True,indent=4)) 
     output.write(",%s" % mode)
@@ -195,4 +196,3 @@ for line in inputfile:
       i=3
   output.write("\n")
 print "Total runs on current key: " + str(counter)
-
