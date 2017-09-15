@@ -21,13 +21,19 @@ color: #FFFFFF;
 .nav2 a:hover, .nav2 a.selected {color: rgb(50,50,50); text-decoration: none;}
 .buffer {clear: both; width: 730px; height: 0px; margin: 20px; padding: 20px; background-color: rgb(255,255,255);}
 .content1-pagetitle {overflow: hidden; width: 750px; margin: 0px 0px 0px 0px; padding: 0px 0px 2px 0px; border-bottom: solid 3px rgb(88,144,168);); background-color: #FFFFFF;font-weight: bold; font-size: 180%;}
+
+
 .page-container-3 {width: 770px;margin: 0px auto; padding: 0px; background-color: url('crimson-background.gif'); border: solid 1px rgb(0,0,250);}
+
   .style16 {
     margin-left: 40px;
     font-size: medium;
 }
 body {font-size: 90%; width: 800px;margin: 0px auto; padding: 20px; background-color: rgb(255,255,255); font-family: arial, sans-serif;min-height: 500px;}
+
+
 .content3 {float: left; width: 800px; min-height: 500px; background-color: #FFFFFF; margin: 0px; padding: 0px 0px 2px 0px; color: rgb(0,0,0); font-size: 1.0em;}
+
 .site-name {
     width: 300px;
     height: 45px;
@@ -39,6 +45,14 @@ body {font-size: 90%; width: 800px;margin: 0px auto; padding: 20px; background-c
     padding-left: 0px;
    background-image: url('crimson-background.gif');
 }
+
+
+
+
+
+
+
+
 a:link {
     color: blue;
     background-color: transparent;
@@ -87,89 +101,147 @@ a:active {
 
 
 <?php
-    $time_stretch = 0;
+function html_form(){
+
+    ?> <html> <body> <form enctype="multipart/form-data" action="results.php" method="POST">
+
+    <input type="submit" value="CLick to continue" />
+
+</form>
+        
+         <form enctype="multipart/form-data" action="gmaps.html" method="POST">
+
+    <input type="submit" value="CLick to go back" />
+
+</form>   
+    </body>
+</html>
+<?php
+}
+session_start();
+
+    $_SESSION['Got_key_count'] = 0;
+    $_SESSION['time_stretch'] = 0;
     
-    $API_KEYs1 = $_POST['API_KEY1'];
-    $API_KEYs2 = $_POST['API_KEY2'];
-    $API_KEYs3 = $_POST['API_KEY3'];
-    $API_KEYs4 = $_POST['API_KEY4'];
-    $API_KEYs5 = $_POST['API_KEY5'];
        
-    $Mode1 = $_POST['Driving'];
-    $Mode2 = $_POST['Walking'];
-    $Mode3 = $_POST['Bicycling'];
-    $Mode4 = $_POST['Transit'];
-if($Mode1 == "0" && $Mode2 == "0" && $Mode3 == "0" && $Mode4 == "0"){
+   
+   #print $_SESSION['Mode1;   
+   #print $_SESSION['Mode2;
+   #print $_SESSION['Mode3;
+   #print $_SESSION['Mode4;
+if($_SESSION['Mode1'] == "0" && $_SESSION['Mode2'] == "0" && $_SESSION['Mode3'] == "0" && $_SESSION['Mode4'] == "0"){
     print "No Modes were Selected. Please Retry Again.";
     exit;
 }
-    $Start_Time = $_POST['Start_Time'];
-    $End_Time = $_POST['End_Time'];
-    if($Start_Time != "" and $End_Time != ""){
+$_SESSION['mode_count'] = 0;
+if($_SESSION['Mode1'] == "on"){
+    $_SESSION['mode_count'] += 1;
+}
+if($_SESSION['Mode2'] == "on"){
+    $_SESSION['mode_count'] += 1;
+}
+if($_SESSION['Mode3'] == "on"){
+    $_SESSION['mode_count'] += 1;
+}
+if($_SESSION['Mode4'] == "on"){
+    $_SESSION['mode_count'] += 1;
+}
+
+#print "TIMES:";
+#print $_SESSION['Start_Time;
+#print $_SESSION['End_Time;
+
+    if($_SESSION['Start_Time'] != "" and $_SESSION['End_Time'] != ""){
        
-        $time_stretch = 1;
+        $_SESSION['time_stretch'] = 1;
     }
     else{
-$Start_Time = 0;
-        $End_Time = 0;
-        $time_stretch = 0;
+$_SESSION['Start_Time'] = 0;
+        $_SESSION['End_Time'] = 0;
+        $_SESSION['time_stretch'] = 0;
     }
-if($_POST['API_KEY1']==""){
+
+if($_SESSION['API_KEYs1']==""){
    echo "An API key must be present in the first entry at least. Please Try again.";
 }
-if($_POST['API_KEY2']==""){
-$Filler2 = "0";
+if($_SESSION['API_KEYs2']==""){
+$_SESSION['Filler2'] = "0";
 }
 else{
-    $Filler2 = $_POST['API_KEY2'];
+    $_SESSION['Filler2'] = $_SESSION['API_KEYs2'];
 }
-if($_POST['API_KEY3']==""){
-$Filler3 = "0";
-}
-else{
-    $Filler3 = $_POST['API_KEY3'];
-}
-if($_POST['API_KEY4']==""){
-$Filler4 = "0";
+if($_SESSION['API_KEYs3']==""){
+$_SESSION['Filler3'] = "0";
 }
 else{
-    $Filler4 = $_POST['API_KEY4'];
+    $_SESSION['Filler3'] = $_SESSION['API_KEYs3'];
 }
-if($_POST['API_KEY5']==""){
-$Filler5 = "0";
+if($_SESSION['API_KEYs4']==""){
+$_SESSION['Filler4'] = "0";
 }
 else{
-    $Filler5 = $_POST['API_KEY5'];
+    $_SESSION['Filler4'] = $_SESSION['API_KEYs4'];
 }
-    $uploaddir = 'uploads/';
-    $uploadfile = $uploaddir . basename($_FILES['userfile']['name']);
-    $filename = $_FILES['userfile']['name'];
-   
+if($_SESSION['API_KEYs5']==""){
+$_SESSION['Filler5'] = "0";
+}
+else{
+    $_SESSION['Filler5'] = $_SESSION['API_KEYs5'];
+}
+   # $_SESSION['uploaddir'] = __DIR__;
+    $filename = $_SESSION['original'];
   
-   
- $name='out_'.date('m-d_hia').'.csv';
-move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile);
+$_SESSION['linecount'] = 0;
+
+
+$handle = fopen($_SESSION['uploadfile'], "r");
+
+   while(!feof($handle)){
+  $_SESSION['line'] = fgets($handle);
+  $_SESSION['linecount'] += 1;
+}
+
+ $_SESSION['name']='out_'.date('m-d_hia').'.csv';
+move_uploaded_file($_SESSION['temp'], $_SESSION['uploadfile']);
+$name = $_SESSION['name'];
+$API_KEYs1 = $_SESSION['API_KEYs1'];
+$Filler2 = $_SESSION['Filler2'];
+$Filler3 = $_SESSION['Filler3'];
+$Filler4 = $_SESSION['Filler4'];
+$Filler5 = $_SESSION['Filler5'];
+$Mode1 = $_SESSION['Mode1'];
+$Mode2 = $_SESSION['Mode2'];
+$Mode3 = $_SESSION['Mode3'];
+$Mode4 = $_SESSION['Mode4'];
+$Start_Time = $_SESSION['Start_Time'];
+$End_Time = $_SESSION['End_Time'];
+$time_stretch = $_SESSION['time_stretch'];
+
 passthru("python gmaps_standard.py uploads/$filename output/$name -off $API_KEYs1 $Filler2 $Filler3 $Filler4 $Filler5 $Mode1 $Mode2 $Mode3 $Mode4 $Start_Time $End_Time $time_stretch 2>&1",$return_var );
-#echo "python gmaps_standard.py uploads/$filename output/$name -off $API_KEYs1 $Filler2 $Filler3 $Filler4 $Filler5 2>&1";
- #print "python gmaps_standard.py uploads/$filename output/$name -off $API_KEYs1 $Filler2 $Filler3 $Filler4 $Filler5 $Mode1 $Mode2 $Mode3 $Mode4 $Start_Time $End_Time $time_stretch 2>&1";
+#echo "python gmaps_standard.py uploads/$_SESSION['filename output/$_SESSION['name -off $_SESSION['API_KEYs1 $_SESSION['Filler2 $_SESSION['Filler3 $_SESSION['Filler4 $_SESSION['Filler5 2>&1";
+ #print "python gmaps_standard.py uploads/$_SESSION['filename output/$_SESSION['name -off $_SESSION['API_KEYs1 $_SESSION['Filler2 $_SESSION['Filler3 $_SESSION['Filler4 $_SESSION['Filler5 $_SESSION['Mode1 $_SESSION['Mode2 $_SESSION['Mode3 $_SESSION['Mode4 $_SESSION['Start_Time $_SESSION['End_Time $_SESSION['time_stretch 2>&1";
+#echo "python gmaps_standard.py uploads/$filename output/$name -off $API_KEYs1 $Filler2 $Filler3 $Filler4 $Filler5 $Mode1 $Mode2 $Mode3 $Mode4 $Start_Time $End_Time $time_stretch 2>&1";
+
  echo"<br><br><br><br>";
- if ($return_var==0) {
+ #if ($_SESSION['return_var==0) {
       echo "File is valid, and was successfully uploaded.\n";
-    } else {
-       echo "Something went wrong. See error above.\n\n\n\n\n";
-    }
+  #  } else {
+    #   echo "Something went wrong. See error above.\n\n\n\n\n";
+   # }
      echo"<br><br><br><br>";
-if($return_var==0){
-    ?><html><body><a href="output/<?php echo $name;?>" download="<?php echo $name;?>">Download The Summary File Here</a>
+#if($_SESSION['return_var==0){
+    ?><html><body><a href="output/<?php echo $_SESSION['name'];?>" download="<?php echo $_SESSION['name'];?>">Download The Summary File Here</a>
 </body>
 
     
 </html>
 <?php
-}
-else{
-    echo "Please try again.";
-}
+#}
+#else{
+#    echo "Please try again.";
+#}
+
+
 ?>
 
 

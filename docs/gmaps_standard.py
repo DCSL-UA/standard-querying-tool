@@ -57,7 +57,6 @@ KEY3 = sys.argv[6]
 KEY4 = sys.argv[7]
 KEY5 = sys.argv[8]
 KEYS=[API_KEY_INPUT,KEY2,KEY3,KEY4,KEY5]
-
 #Compile all modes to see which are to be run (ORDER: Driving,Walking,Biking,Transit)
 all_modes = [sys.argv[9],sys.argv[10],sys.argv[11],sys.argv[12]]
 mode_count = 0
@@ -105,11 +104,13 @@ if (str(time_stretch) == "1"):
 else:
     time_stretch = 0
 for line in inputfile:
-  if(counter>2450):
-      print "Key #" + str(y) + "Reached its limit."
-      API_KEY_INPUT = KEYS[y:x]
+  if(counter>=2490):
+      print "Key #" + str(y) + " Reached its limit.\n"
+      if(KEYS[x] == '0'):
+        print "END of Keys. Partial data download is available below.\n"
+        exit()
+      API_KEY_INPUT = KEYS[x]
       x+=1
-      y+=1
   address = line.strip().split(",")[0]+ ","+line.strip().split(",")[1]
   if(line.strip().split(',')[2][0] == ' '):
     destination = line.strip().split(",")[2][1:] + "," +line.strip().split(",")[3]
@@ -118,7 +119,10 @@ for line in inputfile:
   output.write(address+","+destination+",")
   output.write(str(datetime.datetime.now().strftime("%H:%M:%S")))
   traffic_models_list = []
-  gmaps = googlemaps.Client(key = str(API_KEY_INPUT))
+  try:
+    gmaps = googlemaps.Client(key = str(API_KEY_INPUT))
+  except ValueError:
+    print "API Key was invalid or we ran out of keys to use. Please try again. Partial data may be available in link below.\n"
   iterate_counter=0
   for mode in modes_to_run:
     counter+=1
@@ -128,7 +132,14 @@ for line in inputfile:
       output.write(",IF%s" % traffic_type)
       if(time_stretch == 1):
         time.sleep(time_over_entries)
-      directions = gmaps.directions(address,destination,mode=mode,units="metric",alternatives="true")
+      try:
+        directions = gmaps.directions(address,destination,mode=mode,units="metric",departure_time=datetime.datetime.now(),alternatives="true")
+      except ValueError or googlemaps.exceptions.Timeout():
+        print "Key Has filled up or another error has occured. Any partial data from google can be downloaded below.\n"
+        exit()
+      except googlemaps.exceptions.ApiError:
+        print "API Key is either no longer active or has filled up. Please try with a different key.\n"
+        exit()
       i=0
       #print directions
       output.write(",%s" % mode)
@@ -158,7 +169,14 @@ for line in inputfile:
     else:
       if(str(time_stretch) == "1"):
         time.sleep(time_over_entries)
-      directions = gmaps.directions(address,destination,mode=mode,units="metric",alternatives="true",optimize_waypoints="true")
+      try:
+        directions = gmaps.directions(address,destination,mode=mode,units="metric",departure_time=datetime.datetime.now(),alternatives="true",optimize_waypoints="true")
+      except ValueError or googlemaps.exceptions.Timeout():
+        print "Key Has filled up or another error has occured. Any partial data from google can be downloaded below.\n"
+        exit()
+      except googlemaps.exceptions.ApiError:
+        print "API Key is either no longer active or has filled up. Please try with a different key. Any partial data from google that was able to be pulled can be downloaded below.\n"
+        exit()
     i=0
     outputjson.write(json.dumps(directions,sort_keys=True,indent=4)) 
     output.write(",%s" % mode)
