@@ -13,6 +13,13 @@ from datetime import datetime
 import sys
 import datetime
 
+def finish_line(array_size,array_index,array,output):
+  while(array_index != array_size):
+    if(modes_to_run[array_index] == 'driving'):
+      output.write(",driving,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL")
+    else:
+      output.write(',' + modes_to_run[array_index] + ",NULL,NULL,NULL,NULL,NULL,NULL")
+    array_index += 1
 def get_mode(count):
   if(count == 0):
     return "driving"
@@ -135,10 +142,13 @@ for line in inputfile:
       try:
         directions = gmaps.directions(address,destination,mode=mode,units="metric",departure_time=datetime.datetime.now(),alternatives="true")
       except ValueError or googlemaps.exceptions.Timeout():
+        #finish_line(mode)
         print "Key Has filled up or another error has occured. Any partial data from google can be downloaded below.\n"
+        finish_line(len(modes_to_run),mode,modes_to_run,output)
         exit()
       except googlemaps.exceptions.ApiError:
         print "API Key is either no longer active or has filled up. Please try with a different key.\n"
+        finish_line(len(modes_to_run),mode,modes_to_run,output)
         exit()
       i=0
       #print directions
@@ -173,9 +183,11 @@ for line in inputfile:
         directions = gmaps.directions(address,destination,mode=mode,units="metric",departure_time=datetime.datetime.now(),alternatives="true",optimize_waypoints="true")
       except ValueError or googlemaps.exceptions.Timeout():
         print "Key Has filled up or another error has occured. Any partial data from google can be downloaded below.\n"
+        finish_line(len(modes_to_run),mode,modes_to_run,output)
         exit()
       except googlemaps.exceptions.ApiError:
         print "API Key is either no longer active or has filled up. Please try with a different key. Any partial data from google that was able to be pulled can be downloaded below.\n"
+        finish_line(len(modes_to_run),modes_to_run.index(mode),modes_to_run,output)
         exit()
     i=0
     outputjson.write(json.dumps(directions,sort_keys=True,indent=4)) 
