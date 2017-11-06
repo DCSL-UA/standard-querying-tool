@@ -12,7 +12,23 @@ import time
 from datetime import datetime
 import sys
 import datetime
-
+x=1
+gmaps = ""
+global directions11
+directions11 = ""
+def client(API_KEY_INPUT):
+  global x
+  global gmaps
+  try:
+    gmaps = googlemaps.Client(key = str(API_KEY_INPUT))
+  except:
+    print "API Key " + str(x-1) + " Was Full or invalid.<br>"
+    x += 1
+    if (got_more_keys(KEYS,x) != False):      
+      client(got_more_keys(KEYS,x))
+    else:
+      print "No More keys to run on. None of the keys provided worked."
+      exit()
 def finish_line(array_size,array_index,array,output):
   while(array_index != array_size):
     if(modes_to_run[array_index] == 'driving'):
@@ -20,6 +36,33 @@ def finish_line(array_size,array_index,array,output):
     else:
       output.write(',' + modes_to_run[array_index] + ",NULL,NULL,NULL,NULL,NULL,NULL")
     array_index += 1
+
+def try_except(gmaps12,address,destination,mode,modes_to_run,output,KEYS,a):
+  global gmaps
+  global x
+  try:
+    global directions11
+    directions11 = gmaps.directions(address,destination,mode=mode,units="metric",departure_time=datetime.datetime.now(),alternatives="true")
+  except googlemaps.exceptions.ApiError as e:
+    x += 1
+    print "Key " + str(x-2) + " Has filled up or another error has occured.<br>\n"
+    if(got_more_keys(KEYS,x) != False):
+      client(got_more_keys(KEYS,x))
+      try_except(gmaps,address,destination,mode,modes_to_run,output,KEYS,a)
+    else:
+      print "Key Has filled up or another error has occured. Any partial data from google can be downloaded below.<br>\n"
+      finish_line(len(modes_to_run),modes_to_run.index(mode),modes_to_run,output)
+      exit()
+  except Exception as e:
+    x += 1
+    print "Key " + str(x-2) + " Has filled up or another error has occured.<br>\n"
+    if(got_more_keys(KEYS,x) != False):
+      client(got_more_keys(KEYS,x))
+      try_except(gmaps,address,destination,mode,modes_to_run,output,KEYS,a)
+    else:
+      print "Key " + str(x-1) + " Has filled up or another error has occured. Any partial data from google can be downloaded below.<br>\n"
+      finish_line(len(modes_to_run),modes_to_run.index(mode),modes_to_run,output)
+      exit()
 def get_mode(count):
   if(count == 0):
     return "driving"
@@ -35,13 +78,18 @@ def file_len(fname):
         for i, l in enumerate(f):
             pass
     return i + 1
-def get_seconds(t1,t2,Entry_count):
+def get_seconds(t1,t2,Entry_count,mode_count):
   h1, m1, s1 = t1.hour, t1.minute, t1.second
   h2, m2, s2 = t2.hour, t2.minute, t2.second
   t1_secs = s1 + 60 * (m1 + 60*h1)
   t2_secs = s2 + 60 * (m2 + 60*h2)
-  return((t2_secs - t1_secs)/Entry_count)
+  return((t2_secs/Entry_count)/mode_count)
 
+def got_more_keys(KEYS,count):
+  global x
+  if(KEYS[count-1] == str("0") or x > len(KEYS)-1):
+    return False
+  return KEYS[count-1]
 
 if (sys.argv[1]=="-help"):
    print "To Run, execute as  such: \"python gmaps.py <input_file_name> <output_file_name>\""
@@ -63,7 +111,13 @@ KEY2 = sys.argv[5]
 KEY3 = sys.argv[6]
 KEY4 = sys.argv[7]
 KEY5 = sys.argv[8]
+
+key_count = 0
+
 KEYS=[API_KEY_INPUT,KEY2,KEY3,KEY4,KEY5]
+for key in KEYS:
+  if(key != "0"):
+    key_count += 1
 #Compile all modes to see which are to be run (ORDER: Driving,Walking,Biking,Transit)
 all_modes = [sys.argv[9],sys.argv[10],sys.argv[11],sys.argv[12]]
 mode_count = 0
@@ -97,27 +151,24 @@ destination = ""
 #print "<br>LINE COUNT: " + str(file_len(str(sys.argv[1])))
 
 output.write("\n")
-x=1
 counter=0
 y=0
 time_stretch = sys.argv[15]
-#print time_stretch
-
+client(API_KEY_INPUT)
 if (str(time_stretch) == "1"):
-    start_time = sys.argv[13]
+    start_time = "0:00:00"
     end_time = sys.argv[14]
     time_stretch = sys.argv[15]
-    time_over_entries = get_seconds(datetime.datetime.strptime(start_time,'%H:%M:%S').time(),datetime.datetime.strptime(end_time,'%H:%M:%S').time(),file_len(str(sys.argv[1])))
+    time_over_entries = get_seconds(datetime.datetime.strptime(start_time,'%H:%M:%S').time(),datetime.datetime.strptime(end_time,'%H:%M:%S').time(),file_len(str(sys.argv[1])),mode_count)
+    print "Time between Runs: " + str(time_over_entries)
 else:
     time_stretch = 0
 for line in inputfile:
   if(counter>=2490):
       print "Key #" + str(y) + " Reached its limit.\n"
-      if(KEYS[x] == '0'):
-        print "END of Keys. Partial data download is available below.\n"
-        exit()
-      API_KEY_INPUT = KEYS[x]
-      x+=1
+      counter=0
+      y += 1
+      client(API_KEY_INPUT)
   address = line.strip().split(",")[0]+ ","+line.strip().split(",")[1]
   if(line.strip().split(',')[2][0] == ' '):
     destination = line.strip().split(",")[2][1:] + "," +line.strip().split(",")[3]
@@ -126,10 +177,6 @@ for line in inputfile:
   output.write(address+","+destination+",")
   output.write(str(datetime.datetime.now().strftime("%H:%M:%S")))
   traffic_models_list = []
-  try:
-    gmaps = googlemaps.Client(key = str(API_KEY_INPUT))
-  except ValueError:
-    print "API Key was invalid or we ran out of keys to use. Please try again. Partial data may be available in link below.\n"
   iterate_counter=0
   for mode in modes_to_run:
     counter+=1
@@ -139,30 +186,21 @@ for line in inputfile:
       output.write(",IF%s" % traffic_type)
       if(time_stretch == 1):
         time.sleep(time_over_entries)
-      try:
-        directions = gmaps.directions(address,destination,mode=mode,units="metric",departure_time=datetime.datetime.now(),alternatives="true")
-      except ValueError or googlemaps.exceptions.Timeout():
-        #finish_line(mode)
-        print "Key Has filled up or another error has occured. Any partial data from google can be downloaded below.\n"
-        finish_line(len(modes_to_run),mode,modes_to_run,output)
-        exit()
-      except googlemaps.exceptions.ApiError:
-        print "API Key is either no longer active or has filled up. Please try with a different key.\n"
-        finish_line(len(modes_to_run),mode,modes_to_run,output)
-        exit()
+      print "CALL DIRECT"
+      try_except(gmaps,address,destination,mode,modes_to_run,output,KEYS,x)
       i=0
       #print directions
       output.write(",%s" % mode)
       iterate_counter+=1
-      for route in directions:
+      for route in directions11:
         if(i<3):
           output.write(",")
-          output.write(str(directions['routes'][i]['legs'][0]['duration']['value']))
+          output.write(str(directions11['routes'][i]['legs'][0]['duration']['value']))
           output.write(",")
           if(mode=='driving'):
-            output.write(str(directions['routes'][i]['legs'][0]['duration_in_traffic']['value']))
+            output.write(str(directions11['routes'][i]['legs'][0]['duration_in_traffic']['value']))
             output.write(',')
-          output.write(str(directions['routes'][i]['legs'][0]['distance']['value']))
+          output.write(str(directions11['routes'][i]['legs'][0]['distance']['value']))
           i+=1
       if(i<3 and mode == 'driving'):
         output.write(",NULL,NULL,NULL")
@@ -179,20 +217,11 @@ for line in inputfile:
     else:
       if(str(time_stretch) == "1"):
         time.sleep(time_over_entries)
-      try:
-        directions = gmaps.directions(address,destination,mode=mode,units="metric",departure_time=datetime.datetime.now(),alternatives="true",optimize_waypoints="true")
-      except ValueError or googlemaps.exceptions.Timeout():
-        print "Key Has filled up or another error has occured. Any partial data from google can be downloaded below.\n"
-        finish_line(len(modes_to_run),mode,modes_to_run,output)
-        exit()
-      except googlemaps.exceptions.ApiError:
-        print "API Key is either no longer active or has filled up. Please try with a different key. Any partial data from google that was able to be pulled can be downloaded below.\n"
-        finish_line(len(modes_to_run),modes_to_run.index(mode),modes_to_run,output)
-        exit()
-    i=0
-    outputjson.write(json.dumps(directions,sort_keys=True,indent=4)) 
+      try_except(gmaps,address,destination,mode,modes_to_run,output,KEYS,x)
+      i=0
+    outputjson.write(json.dumps(directions11,sort_keys=True,indent=4)) 
     output.write(",%s" % mode)
-    for route in directions:
+    for route in directions11:
       output.write(",")
       output.write(str(route['legs'][0]['duration']['value']))
       output.write(",")
@@ -225,4 +254,4 @@ for line in inputfile:
       output.write(',NULL,NULL,NULL,NULL,NULL,NULL')
       i=3
   output.write("\n")
-print "Total runs on current key: " + str(counter)
+print "Total runs spread over " + str(key_count) + " key(s) was " + str(counter) + ".\n"
