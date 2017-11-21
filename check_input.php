@@ -76,7 +76,7 @@ a:active {
 </style>
     <head>
 
-    <title>Search Completed</title>
+    <title>Input Check</title>
 
 <div class="style16">
         <meta charset="utf-8" />
@@ -164,11 +164,13 @@ if($_SESSION['Mode4'] == "on"){
     $_SESSION['End_Time'] = $_POST['End_Time'];
 
 #print "TIMES:";
-#print $_SESSION['Start_Time;
-#print $_SESSION['End_Time;
+#print $_SESSION['Start_Time'];
+#print "ENDTIMES:";
+
+#print $_SESSION['End_Time'];
 
     if($_SESSION['Start_Time'] != "" and $_SESSION['End_Time'] != ""){
-       
+     #  print "WOAH TIME STRETCH";
         $_SESSION['time_stretch'] = 1;
     }
     else{
@@ -205,6 +207,10 @@ else{
     $_SESSION['Filler5'] = $_POST['API_KEY5'];
 }
    # $_SESSION['uploaddir'] = __DIR__;
+if($_FILES['userfile']['name'] == ""){
+    echo "No File was provided. Please try again.";
+    exit;
+}
     $_SESSION['uploadfile'] =  __DIR__ . '/uploads/' . basename($_FILES['userfile']['name']);
     $filename = $_FILES['userfile']['name'];
   
@@ -213,7 +219,6 @@ $_SESSION['original'] = $_FILES['userfile']['name'];
 $_SESSION['temp'] = $_FILES['userfile']['tmp_name'];
 $_SESSION['name']='out_'.date('m-d_hia').'.csv';
 move_uploaded_file($_FILES['userfile']['tmp_name'], $_SESSION['uploadfile']);
-
 $handle = fopen($_SESSION['uploadfile'], "r");
 
    while(!feof($handle)){
@@ -221,7 +226,6 @@ $handle = fopen($_SESSION['uploadfile'], "r");
   $_SESSION['linecount'] += 1;
 }
 fclose($handle);
-   
 if($_SESSION['Filler2'] == "0" and $_SESSION['Got_key_count'] == 0){
     if(($_SESSION['mode_count']  * $_SESSION['linecount']) > 2500){
         $_SESSION['Got_key_count'] = 1;
@@ -281,7 +285,7 @@ if($_SESSION['Filler5'] != "0" and $_SESSION['Got_key_count'] == 0){
         exit;
     }
 }
-else{
+
 $_SESSION['original'] = $_FILES['userfile']['name'];
 $_SESSION['temp'] = $_FILES['userfile']['tmp_name'];
 
@@ -302,7 +306,7 @@ $End_Time = $_SESSION['End_Time'];
 $time_stretch = $_SESSION['time_stretch'];
 passthru("python gmaps_standard.py uploads/$filename output/$name -off $API_KEYs1 $Filler2 $Filler3 $Filler4 $Filler5 $Mode1 $Mode2 $Mode3 $Mode4 $Start_Time $End_Time $time_stretch 2>&1",$return_var );
 #echo "python gmaps_standard.py uploads/$_SESSION['filename output/$_SESSION['name -off $_SESSION['API_KEYs1 $_SESSION['Filler2 $_SESSION['Filler3 $_SESSION['Filler4 $_SESSION['Filler5 2>&1";
- #print "python gmaps_standard.py uploads/$_SESSION['filename output/$_SESSION['name -off $_SESSION['API_KEYs1 $_SESSION['Filler2 $_SESSION['Filler3 $_SESSION['Filler4 $_SESSION['Filler5 $_SESSION['Mode1 $_SESSION['Mode2 $_SESSION['Mode3 $_SESSION['Mode4 $_SESSION['Start_Time $_SESSION['End_Time $_SESSION['time_stretch 2>&1";
+#print "python gmaps_standard.py uploads/$filename output/$name -off $API_KEYs1 $Filler2 $Filler3 $Filler4 $Filler5 $Mode1 $Mode2 $Mode3 $Mode4 $Start_Time $End_Time $time_stretch 2>&1";
 
  #if ($_SESSION['return_var==0) {
       echo "File is valid, and was successfully uploaded.\n";
@@ -313,7 +317,7 @@ passthru("python gmaps_standard.py uploads/$filename output/$name -off $API_KEYs
 #if($_SESSION['return_var==0){
     ?><html><body><a href="output/<?php echo $_SESSION['name'];?>" download="<?php echo $_SESSION['name'];?>">Download The Summary File Here</a>
 </body><?php
-}
+
 
 #}
 #else{

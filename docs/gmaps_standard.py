@@ -42,7 +42,7 @@ def try_except(gmaps12,address,destination,mode,modes_to_run,output,KEYS,a):
   global x
   try:
     global directions11
-    directions11 = gmaps.directions(address,destination,mode=mode,units="metric",departure_time=datetime.datetime.now(),alternatives="true")
+    directions11 = gmaps.directions(address,destination,mode=mode,units="metric",departure_time="now",alternatives="true")
   except googlemaps.exceptions.ApiError as e:
     x += 1
     print "Key " + str(x-2) + " Has filled up or another error has occured.<br>\n"
@@ -90,6 +90,12 @@ def got_more_keys(KEYS,count):
   if(KEYS[count-1] == str("0") or x > len(KEYS)-1):
     return False
   return KEYS[count-1]
+
+def check_dest_space(line):
+  if(line.strip().split(',')[2][0] == ' '):
+    return line.strip().split(",")[2][1:] + "," +line.strip().split(",")[3]
+  else:
+    return line.strip().split(",")[2] + "," +line.strip().split(",")[3]
 
 if (sys.argv[1]=="-help"):
    print "To Run, execute as  such: \"python gmaps.py <input_file_name> <output_file_name>\""
@@ -164,77 +170,35 @@ if (str(time_stretch) == "1"):
 else:
     time_stretch = 0
 for line in inputfile:
-  if(counter>=2490):
-      print "Key #" + str(y) + " Reached its limit.\n"
-      counter=0
-      y += 1
-      client(API_KEY_INPUT)
+  
   address = line.strip().split(",")[0]+ ","+line.strip().split(",")[1]
-  if(line.strip().split(',')[2][0] == ' '):
-    destination = line.strip().split(",")[2][1:] + "," +line.strip().split(",")[3]
-  else:
-    destination = line.strip().split(",")[2] + "," +line.strip().split(",")[3]
+  destination = check_dest_space(line)
   output.write(address+","+destination+",")
   output.write(str(datetime.datetime.now().strftime("%H:%M:%S")))
-  traffic_models_list = []
   iterate_counter=0
   for mode in modes_to_run:
     counter+=1
-    for traffic_type in traffic_models_list:
-      counter+=1
-     # print counter
-      output.write(",IF%s" % traffic_type)
-      if(time_stretch == 1):
-        time.sleep(time_over_entries)
-      print "CALL DIRECT"
-      try_except(gmaps,address,destination,mode,modes_to_run,output,KEYS,x)
-      i=0
-      #print directions
-      output.write(",%s" % mode)
-      iterate_counter+=1
-      for route in directions11:
-        if(i<3):
-          output.write(",")
-          output.write(str(directions11['routes'][i]['legs'][0]['duration']['value']))
-          output.write(",")
-          if(mode=='driving'):
-            output.write(str(directions11['routes'][i]['legs'][0]['duration_in_traffic']['value']))
-            output.write(',')
-          output.write(str(directions11['routes'][i]['legs'][0]['distance']['value']))
-          i+=1
-      if(i<3 and mode == 'driving'):
-        output.write(",NULL,NULL,NULL")
-        i+=1
-        while(i<3):
-          output.write(","+"NULL"+",NULL,NULL")
-          i+=1
-      if(i<3):
-        output.write(",NULL,NULL")
-        i+=1
-        while(i<3):
-          output.write(","+"NULL"+",NULL")
-          i+=1
-    else:
-      if(str(time_stretch) == "1"):
-        time.sleep(time_over_entries)
-      try_except(gmaps,address,destination,mode,modes_to_run,output,KEYS,x)
-      i=0
-    outputjson.write(json.dumps(directions11,sort_keys=True,indent=4)) 
+    if(time_stretch == 1):
+      time.sleep(time_over_entries)
+    try_except(gmaps,address,destination,mode,modes_to_run,output,KEYS,x)
+    i=0
+    #print directions
     output.write(",%s" % mode)
+    iterate_counter+=1
     for route in directions11:
-      output.write(",")
-      output.write(str(route['legs'][0]['duration']['value']))
-      output.write(",")
-      if(mode == 'driving'):
-        try:
-          output.write(str(route['legs'][0]['duration_in_traffic']['value']))
-        except KeyError:
-          output.write("NULL")
-        output.write(',')
-      output.write(str(route['legs'][0]['distance']['value']))
-      i+=1
-      if(i==3):
-        break
+      if(i<3):
+        output.write(",")
+        output.write(str(directions11[i]['legs'][0]['duration']['value']))
+        output.write(",")
+        if(mode=='driving'):
+          if "duration_in_traffic" in directions11[i]['legs'][0].keys():
+            output.write(str(directions11[i]['legs'][0]['duration_in_traffic']['value']))
+            output.write(',')
+          else:
+            output.write(str(directions11[i]['legs'][0]['duration']['value']))
+            output.write(",")
+        output.write(str(directions11[i]['legs'][0]['distance']['value']))
+        i+=1
     if(i<3 and mode == 'driving'):
       output.write(",NULL,NULL,NULL")
       i+=1
@@ -247,11 +211,5 @@ for line in inputfile:
       while(i<3):
         output.write(","+"NULL"+",NULL")
         i+=1
-    if( i == 0 and mode=='driving'):
-      output.write(',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL')
-      i=3
-    if(i==0):
-      output.write(',NULL,NULL,NULL,NULL,NULL,NULL')
-      i=3
   output.write("\n")
 print "Total runs spread over " + str(key_count) + " key(s) was " + str(counter) + ".\n"
