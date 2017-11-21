@@ -11,7 +11,7 @@ All input files sent via the HTML Interface are saved into the `uploads` directo
 ## Input File Format
 The python script is supplied an input file which is read. Each line contains a point A and Point B lat and long in the following format:
 `POINTALat,POINTALong,POINTBLat,POINTBLong`
-The above represents one single line of the file. A space is allowed ** after the comma ** following `POINTALong`. 
+The above represents one single line of the file. A space is allowed **after the comma** following `POINTALong`. 
 
 ## Output Files
 The HTML Interface saves all the output files using the current time and date so as not to repeat any filenames, overwriting old data or causing file errors, and to ensure that it is easy to match up corresponding input and output files. The time the input file was uploaded will match the name of the output file. 
@@ -25,7 +25,7 @@ Dlong = Point B longitude
 time = Time that the query for this was sent to google's API
 mode = current mode (I.e Driving in this example)
 d1time = Time that google says this trip will take for Route 1 of potentially 3 (in seconds)
-d1traffic_time = Time that google says this trip will take for Route 1 of potentially 3 ** including estimated current traffic levels **
+d1traffic_time = Time that google says this trip will take for Route 1 of potentially 3 **including estimated current traffic levels**
 d1dist = Distance in meters for route 1 of potentially 3.
 Obviously d2* and d3* is the same as above for Routes 2 and 3
 ### Explanation of Multiple Routes
