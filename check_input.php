@@ -124,6 +124,7 @@ Based on the number of modes selected and number of location pairs in your file,
 }
 
 
+date_default_timezone_set("America/Chicago");
 
     $_SESSION['Got_key_count'] = 0;
     $_SESSION['time_stretch'] = 0;
@@ -292,6 +293,7 @@ $_SESSION['temp'] = $_FILES['userfile']['tmp_name'];
  $_SESSION['name']='out_'.date('m-d_hia').'.csv';
 move_uploaded_file($_FILES['userfile']['tmp_name'], $_SESSION['uploadfile']);
 $name = $_SESSION['name'];
+$linecount = $_SESSION['linecount'];
 $API_KEYs1 = $_SESSION['API_KEYs1'];
 $Filler2 = $_SESSION['Filler2'];
 $Filler3 = $_SESSION['Filler3'];
@@ -304,6 +306,11 @@ $Mode4 = $_SESSION['Mode4'];
 $Start_Time = $_SESSION['Start_Time'];
 $End_Time = $_SESSION['End_Time'];
 $time_stretch = $_SESSION['time_stretch'];
+
+$my_file = 'gmaps_log.txt';
+$handle = fopen($my_file, 'a') or die('Cannot open file:  '.$my_file);
+$data = "\n|| NEW Query: OutputFilename: $name. Input Filename: $filename. InputFileLength: $linecount. Keys Provided: $API_KEYs1, $Filler2, $Filler3, $Filler4, $Filler5. Modes Selected: $Mode1, $Mode2, $Mode3, $Mode4. ";
+fwrite($handle, $data);
 passthru("python gmaps_standard.py uploads/$filename output/$name -off $API_KEYs1 $Filler2 $Filler3 $Filler4 $Filler5 $Mode1 $Mode2 $Mode3 $Mode4 $Start_Time $End_Time $time_stretch 2>&1",$return_var );
 #echo "python gmaps_standard.py uploads/$_SESSION['filename output/$_SESSION['name -off $_SESSION['API_KEYs1 $_SESSION['Filler2 $_SESSION['Filler3 $_SESSION['Filler4 $_SESSION['Filler5 2>&1";
 #print "python gmaps_standard.py uploads/$filename output/$name -off $API_KEYs1 $Filler2 $Filler3 $Filler4 $Filler5 $Mode1 $Mode2 $Mode3 $Mode4 $Start_Time $End_Time $time_stretch 2>&1";
