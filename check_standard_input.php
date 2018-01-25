@@ -109,7 +109,7 @@ function goBack() {
 
 function html_form(){
 
-    ?> <html> <body> <form enctype="multipart/form-data" action="results.php" method="POST">
+    ?> <html> <body> <form enctype="multipart/form-data" action="results_standard.php" method="POST">
 Based on the number of modes selected and number of location pairs in your file, <br><br> You will not be able to fully run this file.<br><br> If you choose to continue, we will run as many as we can and then return those results. <br><br> Otherwise, please go back and add more keys or run with less modes.<br><br>
     <input type="submit" value="Click to Run" />
 
@@ -311,7 +311,10 @@ $my_file = 'gmaps_log.txt';
 $handle = fopen($my_file, 'a') or die('Cannot open file:  '.$my_file);
 $data = "\n|| NEW Query: OutputFilename: $name. Input Filename: $filename. InputFileLength: $linecount. Keys Provided: $API_KEYs1, $Filler2, $Filler3, $Filler4, $Filler5. Modes Selected: $Mode1, $Mode2, $Mode3, $Mode4. ";
 fwrite($handle, $data);
-passthru("python gmaps_standard.py uploads/$filename output/$name -off $API_KEYs1 $Filler2 $Filler3 $Filler4 $Filler5 $Mode1 $Mode2 $Mode3 $Mode4 $Start_Time $End_Time $time_stretch 2>&1",$return_var );
+
+$string = 'python gmaps_standard.py "uploads' . "\\" . "$filename" . '"' . " output" . '\\' . "$name -off $API_KEYs1 $Filler2 $Filler3 $Filler4 $Filler5 $Mode1 $Mode2 $Mode3 $Mode4 $Start_Time $End_Time $time_stretch 2>&1";
+
+passthru($string);
 #echo "python gmaps_standard.py uploads/$_SESSION['filename output/$_SESSION['name -off $_SESSION['API_KEYs1 $_SESSION['Filler2 $_SESSION['Filler3 $_SESSION['Filler4 $_SESSION['Filler5 2>&1";
 #print "python gmaps_standard.py uploads/$filename output/$name -off $API_KEYs1 $Filler2 $Filler3 $Filler4 $Filler5 $Mode1 $Mode2 $Mode3 $Mode4 $Start_Time $End_Time $time_stretch 2>&1";
 

@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
  
 <html lang="en">
 
@@ -86,16 +87,23 @@ a:active {
 }
 </style>
     <head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script> window.onload = function() {
+    if(!window.location.hash) {
+        window.location = window.location + '#loaded';
+        window.location.reload();
+    }
+}
+</script>
     <title>Google Traffic Information Compilation</title>
 
 <div class="style16">
-        <meta charset="utf-8" />
         <meta name="keywords" content="Miclain,Amino,Acid,Database,Search,Keffeler, Atkison, Biology, Alabama, The, University" />
 
 
     
-         
     </head>
     
 
@@ -105,7 +113,7 @@ a:active {
                
 
  <div style="width: 900px; height: 90px;">
-     <img src="bama.jpg" alt="Roger Moore 30's" width="150" height="150">
+     <img src="bama.jpg" width="150" height="150">
   <img src="DCSL.png" alt="logo" align="right" width="150" height="150"/>
     </div>
  <div style="width: 900px; height: 105px; padding-left: 155px;">
@@ -113,23 +121,59 @@ a:active {
 
       </div>
 
-   
-  
-<br>
 
+
+<script> 
+$(document).ready(function() {
+  $('#dropdown').each(function () {
+    var select = $(this);
+    var selectedValue = select.find('option[selected]').val();
+    if (selectedValue) {
+      select.val(selectedValue);
+    } else {
+      select.prop('selectedIndex', 0);
+    }
+  });
+ $('#dropdown').change(function(){
+    if ($(this).val() > 0) {
+      $('#input-holder').empty();
+       for(i=$(this).val(); i <= 5; ++i){
+             var name = 'API_KEY' + i;
+             console.log("HIDDEN " + name)
+             $('#input-holder').append('<input type="hidden"' + 'name="'+ name + '"id="'+ name + '"value="0">');
+      }
+      for (i = 2; i <= $(this).val(); i++) {
+              var name = 'API_KEY' + i;
+console.log("SHOWN " + name)
+             $('#input-holder').append('Please provide your Additional Google API Key(s): <input type="text"' + 'name="'+ name + '"id="'+ name+  '"><br><br>');
+      }
+    
+    }
+});
+  
+});
+ </script>
 
 <br><br>
-<form enctype="multipart/form-data" action="check_input.php" method="POST">
-If you have more than one API Key that you would like to run with, please select the number. Otherwise simply leave them blank.
+<form enctype="multipart/form-data" action="check_standard_input.php" method="POST">
   Please provide your Google API Key: <input type="text" name = "API_KEY1"  id="API_KEY1"/><br><br>
-Please provide your Second Google API Key: <input type="text" name = "API_KEY2" id="API_KEY2"/><br><br>
+If you have more than one API Key that you would like to run with, please select the number below. <br> 
 
-         Please provide your Third Google API Key: <input type="text" name = "API_KEY3" id="API_KEY3"/><br><br>
+  <select id="dropdown">
+  <option value="0" selected >Additional Keys</option>
+  <option value="2">1 Key</option>
+  <option value="3">2 Keys</option>
+  <option value="4">3 Keys</option>
+  <option value="5">4 Keys</option> 
+</select>
+<br><br>
+<div id="input-holder">
+<input type="hidden" name = "API_KEY2" id="API_KEY2" value="0"/>
+<input type="hidden" name = "API_KEY3" id="API_KEY3" value="0"/>
+<input type="hidden" name = "API_KEY4" id="API_KEY4" value="0"/>
+<input type="hidden" name = "API_KEY5" id="API_KEY5" value="0"/>
 
-         Please provide your Fourth Google API Key: <input type="text" name = "API_KEY4"  id="API_KEY4"/><br><br>
-
-        Please provide your Fifth Google API Key: <input type="text" name = "API_KEY5" id="API_KEY5"/><br><br>
-
+</div>​
 <input type="hidden" name="Driving" id = "Driving" value="0" />
     Driving Mode Active?:  <input name="Driving" Id = "Driving" type="checkbox"  />
 
