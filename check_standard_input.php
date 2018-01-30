@@ -218,7 +218,7 @@ if($_FILES['userfile']['name'] == ""){
 $_SESSION['linecount'] = 0;
 $_SESSION['original'] = $_FILES['userfile']['name'];
 $_SESSION['temp'] = $_FILES['userfile']['tmp_name'];
-$_SESSION['name']='out_'.date('m-d_hia').'.csv';
+$_SESSION['name']='out_'.date('m-d_hisa').'.csv';
 move_uploaded_file($_FILES['userfile']['tmp_name'], $_SESSION['uploadfile']);
 $handle = fopen($_SESSION['uploadfile'], "r");
 
@@ -232,7 +232,7 @@ if($_SESSION['Filler2'] == "0" and $_SESSION['Got_key_count'] == 0){
         $_SESSION['Got_key_count'] = 1;
         $_SESSION['original'] = $_FILES['userfile']['name'];
         $_SESSION['temp'] = $_FILES['userfile']['tmp_name'];
-        $_SESSION['name']='out_'.date('m-d_hia').'.csv';
+        $_SESSION['name']='out_'.date('m-d_hisa').'.csv';
         move_uploaded_file($_FILES['userfile']['tmp_name'], $_SESSION['uploadfile']);
 
         html_form();
@@ -244,7 +244,7 @@ if($_SESSION['Filler3'] == "0"){
         $_SESSION['Got_key_count'] = 1;
         $_SESSION['original'] = $_FILES['userfile']['name'];
         $_SESSION['temp'] = $_FILES['userfile']['tmp_name'];
-        $_SESSION['name']='out_'.date('m-d_hia').'.csv';
+        $_SESSION['name']='out_'.date('m-d_hisa').'.csv';
         move_uploaded_file($_FILES['userfile']['tmp_name'], $_SESSION['uploadfile']);
 
         html_form();
@@ -255,7 +255,7 @@ if($_SESSION['Filler4'] == "0" and $_SESSION['Got_key_count'] == 0){
     if($_SESSION['mode_count']  * $_SESSION['linecount'] > 7500){
         $_SESSION['Got_key_count'] = 1;
         $_SESSION['original'] = $_FILES['userfile']['name'];
-        $_SESSION['name']='out_'.date('m-d_hia').'.csv';
+        $_SESSION['name']='out_'.date('m-d_hisa').'.csv';
         move_uploaded_file($_FILES['userfile']['tmp_name'], $_SESSION['uploadfile']);
 
         html_form();
@@ -267,7 +267,7 @@ if($_SESSION['Filler5'] == "0" and $_SESSION['Got_key_count'] == 0){
         $_SESSION['Got_key_count'] = 1;
         $_SESSION['original'] = $_FILES['userfile']['name'];
         $_SESSION['temp'] = $_FILES['userfile']['tmp_name'];
-        $_SESSION['name']='out_'.date('m-d_hia').'.csv';
+        $_SESSION['name']='out_'.date('m-d_hisa').'.csv';
         move_uploaded_file($_FILES['userfile']['tmp_name'], $_SESSION['uploadfile']);
 
         html_form();
@@ -279,7 +279,7 @@ if($_SESSION['Filler5'] != "0" and $_SESSION['Got_key_count'] == 0){
         $_SESSION['Got_key_count'] = 1;
         $_SESSION['temp'] = $_FILES['userfile']['tmp_name'];
         $_SESSION['original'] = $_FILES['userfile']['name'];
-        $_SESSION['name']='out_'.date('m-d_hia').'.csv';
+        $_SESSION['name']='out_'.date('m-d_hisa').'.csv';
         move_uploaded_file($_FILES['userfile']['tmp_name'], $_SESSION['uploadfile']);
 
         html_form();
@@ -290,7 +290,7 @@ if($_SESSION['Filler5'] != "0" and $_SESSION['Got_key_count'] == 0){
 $_SESSION['original'] = $_FILES['userfile']['name'];
 $_SESSION['temp'] = $_FILES['userfile']['tmp_name'];
 
- $_SESSION['name']='out_'.date('m-d_hia').'.csv';
+ $_SESSION['name']='out_'.date('m-d_hisa').'.csv';
 move_uploaded_file($_FILES['userfile']['tmp_name'], $_SESSION['uploadfile']);
 $name = $_SESSION['name'];
 $linecount = $_SESSION['linecount'];
@@ -306,10 +306,10 @@ $Mode4 = $_SESSION['Mode4'];
 $Start_Time = $_SESSION['Start_Time'];
 $End_Time = $_SESSION['End_Time'];
 $time_stretch = $_SESSION['time_stretch'];
-
+$ipaddress = $_SERVER['REMOTE_ADDR'];
 $my_file = 'gmaps_log.txt';
 $handle = fopen($my_file, 'a') or die('Cannot open file:  '.$my_file);
-$data = "\n|| NEW Query: OutputFilename: $name. Input Filename: $filename. InputFileLength: $linecount. Keys Provided: $API_KEYs1, $Filler2, $Filler3, $Filler4, $Filler5. Modes Selected: $Mode1, $Mode2, $Mode3, $Mode4. ";
+$data = "\n|| NEW Query: IP: $ipaddress OutputFilename: $name. Input Filename: $filename. InputFileLength: $linecount. Keys Provided: $API_KEYs1, $Filler2, $Filler3, $Filler4, $Filler5. Modes Selected: $Mode1, $Mode2, $Mode3, $Mode4. ";
 fwrite($handle, $data);
 
 $string = 'python gmaps_standard.py "uploads' . "\\" . "$filename" . '"' . " output" . '\\' . "$name -off $API_KEYs1 $Filler2 $Filler3 $Filler4 $Filler5 $Mode1 $Mode2 $Mode3 $Mode4 $Start_Time $End_Time $time_stretch 2>&1";

@@ -103,9 +103,9 @@ if (sys.argv[1]=="-help"):
    print "Output File defaults to stdout if not specified.\n"
    print "Input File Format = <lat,long,lat,long NEWLINE>No spaces until end of second pair"
    exit(-1)
-output = open(sys.argv[2],"w")
+output = open(sys.argv[2],"w+")
 #print sys.argv[1]
-outputjson = open("google_output.json","w")
+
 inputfile = open(sys.argv[1],"r")
 #Path to output file created
 API_KEY_INPUT = sys.argv[4]
@@ -212,4 +212,6 @@ for line in inputfile:
         output.write(","+"NULL"+",NULL")
         i+=1
   output.write("\n")
+output.close()
+inputfile.close()
 print "Total runs spread over " + str(key_count) + " key(s) was " + str(counter) + ".\n"
