@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+
+ 
+<html lang="en">
+
+
+    <style>
+ 
+   html{background: #61210B }
+.wrap {
+width: 100&#37;;
+height: 600px; /* optional */
+background: #FFFFFF; /* optional */
+font-family: 'times new roman', arial, sans-serif;
+font-size: 1em;
+color: #FFFFFF;
+}
+.header img {
+  float: left;
+  width: 100px;
+  height: 100px;
+}
+.header h1 {
+  position: relative;
+  top: 18px;
+  right: 40px;
+}
+.header1 img {
+  position: absolute;
+  top:60px;
+    right: 30px;
+  width: 100px;
+  height: 100px;
+}
+.header1 h1 {
+  position: relative;
+  top: 18px;
+  left: 10px;
+}
+    .nav2 {clear: both; margin: 0px; background-color: #FFFFFF;padding: 0px; font-family: verdana, arial, sans serif; font-size: 1.0em;}
+.nav2 ul {float: left; width: 770px; margin: 0px; padding: 0px; border-top: solid 1px rgb(54,83,151); border-bottom: solid 1px rgb(54,83,151); background-color: rgb(127,162,202); font-weight: bold;}  
+.nav2 li {display: inline; list-style: none; margin: 0px; padding: 0px;}
+.nav2 li a {display: block; float: left; margin: 0px 0px 0px 0px; padding: 5px 10px 5px 10px; border-right: solid 1px rgb(54,83,151); color: rgb(255,255,255); text-transform: uppercase; text-decoration: none; font-size: 100%;}
+.nav2 a:hover, .nav2 a.selected {color: rgb(50,50,50); text-decoration: none;}
+.buffer {clear: both; width: 730px; height: 0px; margin: 20px; padding: 20px; background-color: rgb(255,255,255);}
+.content1-pagetitle {overflow: hidden; width: 750px; margin: 0px 0px 0px 0px; padding: 0px 0px 2px 0px; border-bottom: solid 3px rgb(88,144,168);); background-color: #FFFFFF;font-weight: bold; font-size: 180%;}
+.page-container-3 {width: 770px;margin: 0px auto; padding: 0px; background-color: url('crimson-background.gif'); border: solid 1px rgb(0,0,250);}
+  .style16 {
+    margin-left: 40px;
+    font-size: medium;
+}
+body {font-size: 90%; width: 1100px;margin: 0px auto; padding: 20px; background-color: rgb(255,255,255); font-family: arial, sans-serif;min-height: 500px;}
+.content3 {float: left; width: 1100px; min-height: 500px; background-color: #FFFFFF; margin: 0px; padding: 0px 0px 2px 0px; color: rgb(0,0,0); font-size: 1.0em;}
+.site-name {
+    width: 300px;
+    height: 45px;
+    top: 12px;
+    position: absolute;
+    z-index: 4;
+    overflow: hidden;
+    margin: 0px;
+    padding-left: 0px;
+   background-image: url('crimson-background.gif');
+}
+figure { 
+    display: inline-block;
+}
+a:link {
+    color: blue;
+    background-color: transparent;
+    text-decoration: none;
+}
+a:visited {
+    color: blue;
+    background-color: transparent;
+    text-decoration: none;
+}
+a:hover {
+    color: black;
+    background-color: transparent;
+    text-decoration: underline;
+}
+a:active {
+    color: yellow;
+    background-color: transparent;
+    text-decoration: underline;
+}
+</style>
+    <head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script> window.onload = function() {
+    if(!window.location.hash) {
+        window.location = window.location + '#loaded';
+        window.location.reload();
+    }
+}
+</script>
+    <title>Google Traffic Information Compilation</title>
+
+<div class="style16">
+        <meta name="keywords" content="Miclain,Amino,Acid,Database,Search,Keffeler, Atkison, Biology, Alabama, The, University" />
+
+
+    
+    </head>
+    
+
+    <body>
+  
+
+               
+
+ <div style="width: 900px; height: 90px;">
+     <img src="bama.jpg" width="150" height="150">
+  <img src="DCSL.png" alt="logo" align="right" width="150" height="150"/>
+    </div>
+ <div style="width: 900px; height: 105px; padding-left: 155px;">
+                 <h1 align="center">Google Traffic Information Compilation</h1>
+
+      </div>
+
+
+
+<script> 
+$(document).ready(function() {
+  $('#dropdown').each(function () {
+    var select = $(this);
+    var selectedValue = select.find('option[selected]').val();
+    if (selectedValue) {
+      select.val(selectedValue);
+    } else {
+      select.prop('selectedIndex', 0);
+    }
+  });
+ $('#dropdown').change(function(){
+    if ($(this).val() > 0) {
+      $('#input-holder').empty();
+       for(i=$(this).val(); i <= 5; ++i){
+             var name = 'API_KEY' + i;
+             console.log("HIDDEN " + name)
+             $('#input-holder').append('<input type="hidden"' + 'name="'+ name + '"id="'+ name + '"value="0">');
+      }
+      for (i = 2; i <= $(this).val(); i++) {
+              var name = 'API_KEY' + i;
+console.log("SHOWN " + name)
+             $('#input-holder').append('Please provide your Additional Google API Key(s): <input type="text"' + 'name="'+ name + '"id="'+ name+  '"><br><br>');
+      }
+    
+    }
+});
+  
+});
+ </script>
+
+<br><br>
+<form enctype="multipart/form-data" action="check_standard_input.php" method="POST">
+  Please provide your Google API Key: <input type="text" name = "API_KEY1"  id="API_KEY1"/><br><br>
+If you have more than one API Key that you would like to run with, please select the number below. <br> 
+
+  <select id="dropdown">
+  <option value="0" selected >Additional Keys</option>
+  <option value="2">1 Key</option>
+  <option value="3">2 Keys</option>
+  <option value="4">3 Keys</option>
+  <option value="5">4 Keys</option> 
+</select>
+<br><br>
+<div id="input-holder">
+<input type="hidden" name = "API_KEY2" id="API_KEY2" value="0"/>
+<input type="hidden" name = "API_KEY3" id="API_KEY3" value="0"/>
+<input type="hidden" name = "API_KEY4" id="API_KEY4" value="0"/>
+<input type="hidden" name = "API_KEY5" id="API_KEY5" value="0"/>
+
+</div>​
+<input type="hidden" name="Driving" id = "Driving" value="0" />
+    Driving Mode Active?:  <input name="Driving" Id = "Driving" type="checkbox"  />
+
+<input type="hidden" name="Walking" id = "Walking" value="0" />
+    Walking Mode Active?:  <input name="Walking" Id = "Walking" type="checkbox" />
+
+   <input type="hidden" name="Bicycling" id = "Bicycling" value="0" />
+   Bicycling Mode Active?:  <input name="Bicycling" Id = "Bicycling" type="checkbox" />
+
+   <input type="hidden" name="Transit" id = "Transit" value="0" />
+   Transit Mode Active?:  <input name="Transit" Id = "Transit" type="checkbox" /><br><br>
+   
+   <input type="hidden" name="Start_Time" id = "Start_Time" value="0" />
+ Start Time (Format: Hour:Minute:Second) :  <input name="Start_Time" Id = "Start_Time" type="text" />
+
+ <br><br>
+
+ 
+   <input type="hidden" name="End_Time" id = "End_Time" value="0" />
+ End Time (Format: Hour:Minute:Second) :  <input name="End_Time" Id = "End_Time" type="text" /><br><br>
+
+    <input type="hidden" name="MAX_FILE_SIZE" value="512000" />
+    Input File for Google Maps API:  <input name="userfile" type="file" /><br><br>
+
+   
+
+    <input type="submit" value="Run Google Maps Script" />
+
+</form>
+        
+            
+    </body>
+</html>
