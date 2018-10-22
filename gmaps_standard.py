@@ -160,6 +160,7 @@ output.write("\n")
 counter=0
 y=0
 time_stretch = sys.argv[15]
+traffic_on = sys.argv[16]
 client(API_KEY_INPUT)
 if (str(time_stretch) == "1"):
     start_time = "0:00:00"
@@ -191,7 +192,7 @@ for line in inputfile:
         output.write(str(directions11[i]['legs'][0]['duration']['value']))
         output.write(",")
         if(mode=='driving'):
-          if "duration_in_traffic" in directions11[i]['legs'][0].keys():
+          if ("duration_in_traffic" in directions11[i]['legs'][0].keys() and traffic_on == "1"):
             output.write(str(directions11[i]['legs'][0]['duration_in_traffic']['value']))
             output.write(',')
           else:

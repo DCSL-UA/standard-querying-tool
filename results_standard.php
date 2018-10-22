@@ -246,6 +246,7 @@ passthru($string);
 #    echo "Please try again.";
 #}
 
+session_destroy();
 
 ?>
 
